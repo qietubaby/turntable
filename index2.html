@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,user-scalable=no" />
+<title>无标题文档</title>
+<style>
+body {
+	margin: 0;
+}
+#wrap{
+	width: 300px;
+	height: 300px;	
+	margin: 30px auto;
+	position: relative;
+	overflow: hidden;
+}
+#box {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background: url(img/img.jpg) no-repeat;
+	background-size: cover;
+}
+#active {
+	width: 42px;
+	height: 98px;
+	background: url(img/pointer.png) no-repeat;
+	position: absolute;
+	left: 129px;
+	top: 52px;
+}
+#btn {
+	width: 100px;
+	height: 100px;
+	position: absolute;
+	background: url(img/round_start.png) no-repeat;
+	background-size: contain;
+	left: 98px;
+	top: 100px;
+	border-radius: 50px;
+}
+#btn.active {
+	background-image:url(img/round_end.png);
+}
+</style>
+<script src="js/touch.js"></script>
+<script>
+var arr = [
+	"一等奖",
+	"谢谢参与",
+	"五等奖",
+	"谢谢参与",
+	"四等奖",
+	"谢谢参与",
+	"三等奖",
+	"谢谢参与",
+	"二等奖",
+	"谢谢参与"
+];
+window.onload  = function(){
+	var box = document.getElementById("box");
+	var btn = document.getElementById("btn");
+	var timer = 0;
+	var target = 0;
+	var deg = 36;
+	btn.addEventListener("touchend",start,false);
+	function start(){
+		btn.removeEventListener("touchend",start,false);
+		btn.addEventListener("touchend",stop,false);
+		btn.className = "active";
+		timer = setInterval(
+			function(){
+				var rotate = css(box,"rotate");
+				rotate += 10;
+				css(box,"rotate",rotate);
+			},
+			20
+		);
+	}
+	function stop(){
+		btn.removeEventListener("touchend",stop,false);
+		clearInterval(timer);
+		//获取停止之前转了多少圈
+		var R = parseInt(css(box,"rotate") / 360);
+		//点击停止后再转两圈并到目标角度逐渐停下来
+		var targetDeg = (R+2)*360+(deg*target);
+		mTween(box,{rotate:targetDeg },5000,"easeOutStrong");
+	}
+};
+</script>
+</head>
+<body>
+<div id="wrap">
+	<div id="box"></div>
+	<div id="active"></div>
+    <a href="javascript:;" id="btn"></a>
+</div>    
+</body>
+</html>
